@@ -27,7 +27,7 @@ This application contains multiple smaller individual projects (services)
 
 :file_folder: customer-service
 
-Spring loads `bootrap.yml` before `application.yml`. Hence we will configure server registry here.
+Spring loads `bootstrap.yml` before `application.yml`. Hence we will configure server registry here.
 
 Because of `server.port=0`, `port` will be dynamically assigned each time customer-service runs.
 
