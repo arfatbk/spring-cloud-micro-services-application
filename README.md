@@ -78,7 +78,7 @@ Request will look something like this:
 
 
     curl --request GET \
-        --url 'http://localhost:8282/oauth/check_token?token=f27fca4d-e0d8-4ac4-b9b0-b9d8dfee79f3' \
-        --header 'authorization: Basic bW9iaWxlOnBpbg=='
+      --url 'http://localhost:8282/oauth/check_token?token=f27fca4d-e0d8-4ac4-b9b0-b9d8dfee79f3' \
+      --header 'authorization: Basic bW9iaWxlOnBpbg=='
       
 > `authorization` header is to provide client credentials
