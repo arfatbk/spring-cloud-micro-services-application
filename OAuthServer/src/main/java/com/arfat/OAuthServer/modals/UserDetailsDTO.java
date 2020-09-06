@@ -21,14 +21,12 @@ public class UserDetailsDTO extends User implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
         List<GrantedAuthority> authorities = new ArrayList<>();
-        getRoles().stream().map(role -> {
+        getRoles().forEach(role -> {
             authorities.add(new SimpleGrantedAuthority(role.getName()));
 
             role.getPermissions()
-                    .stream()
-                    .map(permission -> authorities.add(new SimpleGrantedAuthority(permission.getName())));
+                    .forEach(permission -> authorities.add(new SimpleGrantedAuthority(permission.getName())));
 
-            return role;
         });
         return authorities;
     }
