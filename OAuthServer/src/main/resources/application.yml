@@ -1,19 +1,42 @@
 server:
   port: 8282
-spring:
-  security:
-    user:
-      name: arfat
-      password: pass123
-      roles: ADMIN,USER
+#spring:
+#  security:
+#    user:
+#      name: arfat
+#      password: pass123
+#      roles: ADMIN,USER
+#
+#security:
+#  oauth2:
+#    client:
+#      client-id: mobile
+#      client-secret: pin
+#      access-token-validity-seconds: 3600
+#      authorized-grant-types: refresh_token,authorization_code,password
+#      scope: READ,WRITE_PROFILE
+#    authorization:
+#      check-token-access: permitAll
 
-security:
-  oauth2:
-    client:
-      client-id: mobile
-      client-secret: pin
-      access-token-validity-seconds: 3600
-      authorized-grant-types: refresh_token,authorization_code,password
-      scope: READ,WRITE_PROFILE
-    authorization:
-      check-token-access: permitAll
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/OAuthDB?createDatabaseIfNotExist=true
+    username: postgres
+    password: root
+    initialization-mode: always
+  jpa:
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+logging:
+  level:
+    org:
+      hibernate:
+        type: trace
