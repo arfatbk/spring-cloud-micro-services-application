@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: oauth-service
+
+eureka:
+  instance:
+    hostname: localhost
+    instanceId: ${spring.application.name}-${random.int}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:9999/eureka

@@ -53,7 +53,7 @@ Because of `server.port=0`, `port` will be dynamically assigned each time custom
 ## OAuthServer
 :file_folder: OAuthServer
 
-OAuth server will run on `port 8282`. This is dfined in :memo: application.yml
+OAuth server will run on `port 8282`. This is defined in :memo: application.yml
     
     server:
       port: 8282

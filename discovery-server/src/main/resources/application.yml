@@ -7,6 +7,12 @@ eureka:
   client:
     register-with-eureka: false
     fetch-registry: false
+
+#  Optional
+  datacenter: On-premise-Bare-Metal
+  environment: dev
+
+
 logging:
   level:
     com:
