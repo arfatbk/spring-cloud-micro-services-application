@@ -8,6 +8,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 
+/**
+ * @author Arfat Bin Kileb
+ * Created at  04-09-2020 02:36 PM
+ */
 @SpringBootApplication
 @EnableAuthorizationServer
 public class OAuthServerApplication {

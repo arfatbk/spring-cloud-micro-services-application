@@ -1,9 +1,9 @@
 package com.arfat.OAuthServer.configuration;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurer;
@@ -23,12 +23,17 @@ import javax.sql.DataSource;
 @EnableAuthorizationServer
 public class OAuthServerConfiguration implements AuthorizationServerConfigurer {
 
-    @Autowired
     private DataSource dataSource;
-    @Autowired
-    PasswordEncoder passwordEncoder;
-    @Autowired
-    AuthenticationManager authenticationManager;
+    private PasswordEncoder passwordEncoder;
+    private AuthenticationManager authenticationManager;
+    private UserDetailsService userDetailsService;
+
+    public OAuthServerConfiguration(DataSource dataSource, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, UserDetailsService userDetailsService) {
+        this.dataSource = dataSource;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.userDetailsService = userDetailsService;
+    }
 
     @Override
     public void configure(final AuthorizationServerSecurityConfigurer security) throws Exception {
@@ -46,6 +51,7 @@ public class OAuthServerConfiguration implements AuthorizationServerConfigurer {
     public void configure(final AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints.authenticationManager(authenticationManager);
         endpoints.tokenStore(tokenStore());
+        endpoints.userDetailsService(userDetailsService);
     }
 
     @Bean

@@ -58,27 +58,41 @@ OAuth server will run on `port 8282`. This is dfined in :memo: application.yml
     server:
       port: 8282
       
-- Getting `access token`
+- Getting `access_token`
 
 > Default endpoint to get `access token` is `<host>/oauth/token`, and 
 to check token `<host>/oauth/check_token`
  
 Request will look something like this:
 
-        curl --request POST \
-          --url http://localhost:8282/oauth/token \
-          --header 'authorization: Basic bW9iaWxlOnBpbg==' \
-          --header 'content-type: application/x-www-form-urlencoded' \
-          --data grant_type=password \
-          --data username=arfat \
-          --data password=pass123 \
+    curl --request POST \
+      --url http://localhost:8282/oauth/token \
+      --header 'authorization: Basic bW9iaWxlOnBpbg==' \
+      --header 'content-type: application/x-www-form-urlencoded' \
+      --data grant_type=password \
+      --data username=arfat \
+      --data password=pass123 \
       
 
-- Checking `access token`
+- Checking `access_token`
 
+This request will validate `access_token`
 
-        curl --request GET \
-          --url 'http://localhost:8282/oauth/check_token?token=f27fca4d-e0d8-4ac4-b9b0-b9d8dfee79f3' \
-          --header 'authorization: Basic bW9iaWxlOnBpbg=='
+    curl --request GET \
+      --url 'http://localhost:8282/oauth/check_token?\
+            token=f27fca4d-e0d8-4ac4-b9b0-b9d8dfee79f3' \
+      --header 'authorization: Basic bW9iaWxlOnBpbg=='
       
+- Generate new `access_token` with `refresh_token`
+
+This request will generate new `access_token`
+
+    curl --request POST \
+      --url http://localhost:8282/oauth/token \
+      --header 'authorization: Basic bW9iaWxlOnBpbg==' \
+      --header 'content-type: application/x-www-form-urlencoded' \
+      --data grant_type=refresh_token \
+      --data refresh_token=a56ccec4-df05-488a-8a5f-ec0ce38f4bc4
+
 > `authorization` header is to provide client credentials
+
