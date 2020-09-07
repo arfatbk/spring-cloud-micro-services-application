@@ -20,9 +20,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:<URL>
-    username: <username>
-    password: <password>
+    url: jdbc:postgresql://localhost:5432/OAuthDB?createDatabaseIfNotExist=true
+    username: postgres
+    password: root
     initialization-mode: always
   jpa:
     open-in-view: false
