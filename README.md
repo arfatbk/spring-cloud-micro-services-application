@@ -1,6 +1,6 @@
 # Spring Cloud application
 
-    :fox_face: Arfat Bin Kileb
+:fox_face: Arfat Bin Kileb
 
 This application contains multiple smaller individual projects (services)
 
