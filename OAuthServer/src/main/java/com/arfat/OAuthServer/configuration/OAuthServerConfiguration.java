@@ -27,12 +27,14 @@ public class OAuthServerConfiguration implements AuthorizationServerConfigurer {
     private PasswordEncoder passwordEncoder;
     private AuthenticationManager authenticationManager;
     private UserDetailsService userDetailsService;
+    private JwtTokenConverter jwtTokenConverter;
 
-    public OAuthServerConfiguration(DataSource dataSource, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, UserDetailsService userDetailsService) {
+    public OAuthServerConfiguration(DataSource dataSource, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, UserDetailsService userDetailsService, JwtTokenConverter jwtTokenConverter) {
         this.dataSource = dataSource;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
+        this.jwtTokenConverter = jwtTokenConverter;
     }
 
     @Override
@@ -49,9 +51,10 @@ public class OAuthServerConfiguration implements AuthorizationServerConfigurer {
 
     @Override
     public void configure(final AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        endpoints.authenticationManager(authenticationManager);
-        endpoints.tokenStore(tokenStore());
-        endpoints.userDetailsService(userDetailsService);
+        endpoints.authenticationManager(authenticationManager)
+                .tokenStore(tokenStore())
+                .userDetailsService(userDetailsService)
+                .accessTokenConverter(jwtTokenConverter);
     }
 
     @Bean

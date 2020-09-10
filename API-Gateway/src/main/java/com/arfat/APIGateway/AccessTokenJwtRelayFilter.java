@@ -4,8 +4,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -31,14 +29,14 @@ public class AccessTokenJwtRelayFilter extends AbstractGatewayFilterFactory<Obje
         return (exchange, chain) -> {
 
             String accessToken = exchange.getRequest().getHeaders().getFirst("auth");
+            //TODO: Derive resource from URI pattern
+            String resource = exchange.getRequest().getHeaders().getFirst("resource");
             log.info("Token Relay===========================" + accessToken);
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.setBasicAuth("bW9iaWxlOnBpbg==");
-            HttpEntity<String> entity = new HttpEntity<String>(headers);
 
             //TODO:check if token is null
-            String uri = "http://localhost:8282/oauth/check_token?token=" + accessToken;
+            String uri = "http://localhost:8282/oauth/check_token?token=" +
+                    accessToken + "&resource=" + resource;
 
             return webClient.get().uri(uri)
                     .headers(httpHeaders -> httpHeaders.setBasicAuth("bW9iaWxlOnBpbg=="))
@@ -49,8 +47,7 @@ public class AccessTokenJwtRelayFilter extends AbstractGatewayFilterFactory<Obje
                             return clientResponse
                                     .toEntity(Map.class)
                                     .flatMap(s -> {
-                                        String jwtToken = (String) s.getBody().getOrDefault("user_name", "null");
-                                        System.out.println("user_name =" + jwtToken);
+                                        String jwtToken = (String) s.getBody().getOrDefault("jwt", null);
                                         ServerWebExchange ex = this.withBearerAuth(exchange, jwtToken);
                                         return chain.filter(ex);
                                     });

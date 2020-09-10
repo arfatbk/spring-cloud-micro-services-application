@@ -48,8 +48,8 @@ public class Router {
     }
 
     @RequestMapping("/fallback")
-    public String fallback(@RequestHeader("Authorization") String str) {
-        System.out.println("str = " + str);
+    public String fallback(@RequestHeader("Authorization") String jwt) {
+        System.out.println("jwt Token = " + jwt);
         return "fallback";
     }
 }
