@@ -7,6 +7,7 @@ This application contains multiple smaller individual projects (services)
   1. [Spring Eureka server](#spring-eureka-server)
   2. [Customer service](#customer-service)
   3. [OAuthServer](#oauthserver)
+  4. [API Gateway](#api-gateway)
 
 ## Spring Eureka server
 
@@ -51,18 +52,18 @@ Because of `server.port=0`, `port` will be dynamically assigned each time custom
             defaultZone: http://localhost:9999/eureka
 
 ## OAuthServer
+
 :file_folder: OAuthServer
 
 OAuth server will run on `port 8282`. This is defined in :memo: application.yml
-    
+
     server:
       port: 8282
-      
+
 - Getting `access_token`
 
-> Default endpoint to get `access token` is `<host>/oauth/token`, and 
-to check token `<host>/oauth/check_token`
- 
+> Default endpoint to get `access token` is `<host>/oauth/token`, and to check token `<host>/oauth/check_token`
+
 Request will look something like this:
 
     curl --request POST \
@@ -72,7 +73,6 @@ Request will look something like this:
       --data grant_type=password \
       --data username=arfat \
       --data password=pass123 \
-      
 
 - Checking `access_token`
 
@@ -82,7 +82,7 @@ This request will validate `access_token`
       --url 'http://localhost:8282/oauth/check_token?\
             token=f27fca4d-e0d8-4ac4-b9b0-b9d8dfee79f3' \
       --header 'authorization: Basic bW9iaWxlOnBpbg=='
-      
+
 - Generate new `access_token` with `refresh_token`
 
 This request will generate new `access_token`
@@ -96,3 +96,21 @@ This request will generate new `access_token`
 
 > `authorization` header is to provide client credentials
 
+## API Gateway
+
+API Gateway serves as a "Single Entry point" into the service-mesh.
+
+API Gateway provides :
+
+- Service discovery  
+- Routing
+- Load balancing
+- Resilliency `<TBD>`  
+- Circuit Breaking `<TBD>`
+- AuthX & AuthZ
+
+At this point, We define the rules for public/secure Resource endpoints.
+
+Based on this Desicion, `API Gateway` adds a `Token relay` for `AuthX` & `AuthZ`
+
+> `Token relay` is simple GateWay Filter, Which adds `JWT token` as Authorization header for `Downstream services`.
