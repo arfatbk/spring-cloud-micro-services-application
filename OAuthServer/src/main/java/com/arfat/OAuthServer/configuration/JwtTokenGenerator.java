@@ -19,9 +19,8 @@ public class JwtTokenGenerator {
 
     public String generate(Map<String, Object> claims) {
         return Jwts.builder()
-                .setSubject((String)claims.remove("user_name"))
                 .setClaims(claims)
-                .signWith(SignatureAlgorithm.HS256,this.PRIVATE_KEY)
+                .signWith(SignatureAlgorithm.HS256, this.PRIVATE_KEY)
                 .setExpiration(new Date(System.currentTimeMillis() + this.TOKEN_EXPIRATION_IN_SECONDS * 1000))
                 .compact();
     }

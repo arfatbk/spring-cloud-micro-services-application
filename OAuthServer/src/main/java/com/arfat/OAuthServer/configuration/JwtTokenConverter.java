@@ -1,5 +1,6 @@
 package com.arfat.OAuthServer.configuration;
 
+import com.arfat.OAuthServer.modals.UserDetailsDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,6 +16,7 @@ import org.springframework.security.oauth2.provider.token.UserAuthenticationConv
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.util.*;
 
 /**
@@ -68,6 +70,8 @@ public class JwtTokenConverter implements AccessTokenConverter {
             claims.put("aud", resource);
         }
 
+        final String username = ((UserDetailsDTO) authentication.getPrincipal()).getUsername();
+        claims.put("sub", username);
 
         if (token.getScope() != null) {
             claims.put(this.scopeAttribute, token.getScope());
@@ -75,11 +79,10 @@ public class JwtTokenConverter implements AccessTokenConverter {
 
         OAuth2Request clientToken = authentication.getOAuth2Request();
 
+        final Collection<GrantedAuthority> authorities = authentication.getAuthorities();
         claims.put(this.clientIdAttribute, clientToken.getClientId());
-        if (!authentication.isClientOnly()) {
-            claims.putAll(this.userTokenConverter.convertUserAuthentication(authentication.getUserAuthentication()));
-        } else if (clientToken.getAuthorities() != null && !clientToken.getAuthorities().isEmpty()) {
-            claims.put("authorities", AuthorityUtils.authorityListToSet(clientToken.getAuthorities()));
+        if (authorities != null && !authorities.isEmpty()) {
+            claims.put("authorities", AuthorityUtils.authorityListToSet(authorities));
         }
 
         if (this.includeGrantType && authentication.getOAuth2Request().getGrantType() != null) {
@@ -103,7 +106,7 @@ public class JwtTokenConverter implements AccessTokenConverter {
         info.remove(this.clientIdAttribute);
         info.remove(this.scopeAttribute);
         if (map.containsKey("exp")) {
-            token.setExpiration(new Date((Long)map.get("exp") * 1000L));
+            token.setExpiration(new Date((Long) map.get("exp") * 1000L));
         }
 
         if (map.containsKey("jti")) {
