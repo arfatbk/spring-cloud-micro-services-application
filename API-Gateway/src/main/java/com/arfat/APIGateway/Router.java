@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.Optional;
+
 /**
  * @author Arfat Bin Kileb
  * Created at 08-09-2020 07:41 AM
@@ -28,11 +30,14 @@ public class Router {
                 .route(r -> r.path("/get")
                         .filters(f -> f
                                 .addResponseHeader("X-Spring-Gateway", "API Gateway")
-                                .setPath("/fallback")
-                                .filter(tokenRelayFilter.apply()))
+                                .setPath("/fallback"))
                         .uri("http://localhost:8080"))
                 .route(r -> r.path("/fallback")
                         .uri("localhost:8080"))
+                .route(r -> r.path("/customers*")
+                        .filters(f -> f.setPath("/")
+                                .filter(tokenRelayFilter.apply("customer-service")))
+                        .uri("lb://customer-service"))
                 .build();
     }
 
@@ -43,13 +48,13 @@ public class Router {
 
     @Bean
     WebClient webClient() {
-        //Add default header for OAuth server
+        //TODO: Add default header for OAuth server
         return WebClient.builder().build();
     }
 
     @RequestMapping("/fallback")
-    public String fallback(@RequestHeader("Authorization") String jwt) {
-        System.out.println("jwt Token = " + jwt);
+    public String fallback(@RequestHeader("Authorization") Optional<String> jwt) {
+        System.out.println("jwt Token = " + jwt.get());
         return "fallback";
     }
 }

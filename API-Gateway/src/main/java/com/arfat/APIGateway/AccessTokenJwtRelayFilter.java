@@ -30,7 +30,7 @@ public class AccessTokenJwtRelayFilter extends AbstractGatewayFilterFactory<Obje
 
             String accessToken = exchange.getRequest().getHeaders().getFirst("auth");
             //TODO: Derive resource from URI pattern
-            String resource = exchange.getRequest().getHeaders().getFirst("resource");
+            String resource = (String) config;
             log.info("Token Relay===========================" + accessToken);
 
 
