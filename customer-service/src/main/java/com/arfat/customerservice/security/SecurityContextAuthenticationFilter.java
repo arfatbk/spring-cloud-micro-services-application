@@ -1,7 +1,11 @@
 package com.arfat.customerservice.security;
 
+import com.arfat.JWTTokenUtils.JWTParserBuilder;
+import com.arfat.JWTTokenUtils.JWTTokenBody;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +22,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  * @author Arfat Bin Kileb
@@ -39,9 +44,16 @@ public class SecurityContextAuthenticationFilter extends OncePerRequestFilter {
             final String token = authorization.substring(7);
 
             try {
-                final JwtUtils.TokenBody body = new JwtUtils().parse(token).getBody();
-                username = body.getUsername();
-                authorities = body.getAuthorities();
+
+                String PRIVATE_KEY = "ABCD1234567890";
+                JWTTokenBody body = JWTParserBuilder.withToken(token)
+                        .withKey(PRIVATE_KEY)
+                        .withSigningAlgorithm(SignatureAlgorithm.HS256)
+                        .parse();
+
+                username = body.getUserName();
+                authorities = body.getAuthorities().stream()
+                        .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
                 shouldContinue = true;
             } catch (Exception e) {
                 shouldContinue = false;
